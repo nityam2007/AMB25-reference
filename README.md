@@ -1405,7 +1405,7 @@ WiFi.macAddress(mac);
 | | |
 |:-:|:-:|
 | **Version** | 2.0.0 |
-| **Last Updated** | December 2024 |
+| **Last Updated** | December 2025 |
 | **Author** | [Nityam](https://github.com/Nityam2007) |
 | **License** | MIT |
 
