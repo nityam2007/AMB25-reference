@@ -1,157 +1,329 @@
-# AMB25/AMB26 Complete Reference Guide
+<div align="center">
 
-**Realtek RTL8720DF (AmebaD) Development Board**
+# 🔌 AMB25/AMB26 Complete Reference Guide
 
-This is a comprehensive reference for developing on AMB25/AMB26 boards with Arduino IDE.
+### Realtek RTL8720DF (AmebaD) Development Board
 
----
-
-## Table of Contents
-
-1. [Board Overview](#board-overview)
-2. [Arduino IDE Setup](#arduino-ide-setup)
-3. [GPIO Reference](#gpio-reference)
-4. [Platform Detection](#platform-detection)
-5. [WiFi](#wifi)
-6. [Serial Communication](#serial-communication)
-7. [System Functions](#system-functions)
-8. [Storage (Flash/EEPROM)](#storage)
-9. [Common Issues & Fixes](#common-issues--fixes)
-10. [Code Examples](#code-examples)
+[![Platform](https://img.shields.io/badge/Platform-AMB25%20%7C%20AMB26-blue?style=for-the-badge)](https://www.amebaiot.com/en/amebad-amb25-arduino-getting-started/)
+[![Chip](https://img.shields.io/badge/Chip-RTL8720DF-green?style=for-the-badge)](https://www.realtek.com)
+[![WiFi](https://img.shields.io/badge/WiFi-2.4GHz%20%2B%205GHz-orange?style=for-the-badge)](#wifi)
+[![BLE](https://img.shields.io/badge/BLE-5.0-purple?style=for-the-badge)](#)
+[![Arduino](https://img.shields.io/badge/Arduino-Compatible-teal?style=for-the-badge)](https://www.arduino.cc/)
 
 ---
 
-## Board Overview
+**📖 Comprehensive reference for developing on AMB25/AMB26 boards with Arduino IDE**
+
+[📚 Official Docs](https://www.amebaiot.com/en/amebad-amb25-arduino-getting-started/) • 
+[🛒 Buy Board](https://www.amebaiot.com) • 
+[💬 Community](https://forum.amebaiot.com/)
+
+</div>
+
+---
+
+## 📋 Table of Contents
+
+<details>
+<summary>Click to expand</summary>
+
+- [🔧 Board Overview](#-board-overview)
+- [⚙️ Arduino IDE Setup](#️-arduino-ide-setup)
+- [📍 GPIO Reference](#-gpio-reference)
+- [🔍 Platform Detection](#-platform-detection)
+- [📶 WiFi](#-wifi)
+- [💬 Serial Communication](#-serial-communication)
+- [🔄 System Functions](#-system-functions)
+- [💾 Storage (Flash/EEPROM)](#-storage)
+- [🐛 Common Issues & Fixes](#-common-issues--fixes)
+- [📝 Code Examples](#-code-examples)
+- [📋 Quick Reference Card](#-quick-reference-card)
+
+</details>
+
+---
+
+## 🔧 Board Overview
+
+> **Realtek RTL8720DF** is a Wi-Fi and Bluetooth IC that supports 2.4GHz and 5GHz dual bands for Wi-Fi communication, and Bluetooth Low Energy (BLE) 5.0. AMB25 is a development board integrating the RTL8720DF module with USB Type-C connector and Auto Upload circuit.
+
+### 📊 Specifications
 
 | Specification | Value |
-|---------------|-------|
-| **Chip** | Realtek RTL8720DF |
-| **CPU** | ARM Cortex-M33 @ 200MHz |
-| **RAM** | 512KB |
-| **Flash** | 4MB (2MB for user) |
-| **WiFi** | 2.4GHz + 5GHz (802.11 a/b/g/n) |
-| **Bluetooth** | BLE 5.0 |
-| **Operating Voltage** | 3.3V |
-| **Digital I/O** | ~20 pins |
-| **ADC** | 3 channels |
-| **PWM** | Multiple channels |
-| **Interfaces** | UART, SPI, I2C |
+|:-------------:|:-----:|
+| **🧠 Chip** | Realtek RTL8720DF |
+| **⚡ CPU** | ARM Cortex-M33 @ 200MHz |
+| **📦 RAM** | 512KB |
+| **💿 Flash** | 4MB (2MB for user) |
+| **📶 WiFi** | 2.4GHz + 5GHz dual band (802.11 a/b/g/n) |
+| **🔵 Bluetooth** | BLE 5.0 |
+| **🔌 Operating Voltage** | 3.3V |
+| **📐 Board Size** | 50.7 × 17.8 mm |
+| **🔗 USB** | Type-C (power + upload) |
+| **🔢 Digital I/O** | 20 pins |
+| **📈 ADC** | 3 channels (A4, A5, A6) |
+| **〰️ PWM** | 12 channels |
+| **🔀 Interfaces** | 2× UART, 2× SPI, 1× I2C, IR |
 
-### AMB25 vs AMB26
+### 📷 Board Images
 
-- **AMB25**: Standard module with pins exposed
-- **AMB26**: Same chip, different form factor/pinout
+<div align="center">
+
+| PINs | BOARD View |
+|:----------:|:---------:|
+| ![AMB25 PINS](https://www.amebaiot.com/wp-content/uploads/2022/12/amb25/P02.png) | ![AMB25 BOARD](https://www.amebaiot.com/wp-content/uploads/2022/12/amb25/P01.png) |
+
+</div>
+
+### 🔄 AMB25 vs AMB26
+
+| Feature | AMB25 | AMB26 |
+|---------|:-----:|:-----:|
+| Chip | RTL8720DF | RTL8720DF |
+| USB | Type-C ✅ | Varies |
+| Auto Upload | ✅ Yes | Board dependent |
+| Form Factor | Standard | Different pinout |
+
+### 🔘 Board Buttons
+
+| Button | Location | Function |
+|:------:|:--------:|:---------|
+| **RST** | ⬅️ Left of USB | Reset the board |
+| **Burn** | ➡️ Right of USB | Enter upload mode (hold during reset) |
 
 ---
 
-## Arduino IDE Setup
+## ⚙️ Arduino IDE Setup
 
-### 1. Install Board Package
+<details>
+<summary><b>📥 Step 1: Install Board Package</b></summary>
 
-1. Open Arduino IDE
+1. Open Arduino IDE (version 1.6.5 or later)
 2. Go to **File → Preferences**
-3. Add this URL to "Additional Board Manager URLs":
-   ```
-   https://github.com/ambiot/ambd_arduino/raw/master/Arduino_package/package_realtek_amebad_index.json
-   ```
-4. Go to **Tools → Board → Board Manager**
-5. Search for "Realtek AmebaD"
-6. Install **Realtek AmebaD Boards** (version 3.1.9 or later)
+3. Add this URL to "Additional Boards Manager URLs":
 
-### 2. Select Board
+```
+https://github.com/ambiot/ambd_arduino/raw/master/Arduino_package/package_realtek_amebad_index.json
+```
 
-- **Tools → Board → AmebaD ARM (32-bit) Boards → AMB25**
-- Or for AMB26: **AMB26**
+4. Go to **Tools → Board → Boards Manager**
+5. Search for `Realtek`
+6. Find **"Realtek Ameba Boards (32-bits ARM Cortex-M33 @200MHz)"**
+7. Click **Install** (may take several minutes)
 
-### 3. Upload Settings
+</details>
 
-| Setting | Value |
-|---------|-------|
-| **Port** | `/dev/ttyUSB0` (Linux) or `COMx` (Windows) |
-| **Upload Speed** | 2000000 (default) |
-| **Erase Flash** | Disable (unless needed) |
+<details>
+<summary><b>📴 Offline Installation</b></summary>
 
-### 4. Enter Download Mode
+> ⚠️ Use this if you have network issues
 
-Before uploading:
-1. Press and hold **BOOT** button
-2. Press **RESET** button
-3. Release **RESET**
-4. Release **BOOT**
-5. Click Upload in Arduino IDE
+1. Download from https://www.amebaiot.com/en/ameba-arduino-summary/
+2. Download these sections:
+   - ✅ **AmebaD_Arduino_patch1_SDK** (required - choose latest)
+   - ✅ **AmebaD_Arduino_patch2_Tools** (required - choose your OS)
+   - 📦 **AmebaD_Arduino_Source_Code** (optional)
+3. Unzip and run installation tool from `Offline_SDK_installation_tool` folder
+
+</details>
+
+<details>
+<summary><b>🎯 Step 2: Select Board</b></summary>
+
+Go to **Tools → Board → Ameba ARM (32-bits) Boards → AMB25/AMB26 (RTL8720DF)**
+
+</details>
+
+<details>
+<summary><b>🔌 Step 3: Install USB Driver</b></summary>
+
+- Connect board via USB Type-C
+- Driver usually installs automatically
+- If not, download PL2303GC driver from: https://www.prolific.com.tw/US/ShowProduct.aspx?p_id=225&pcid=41
+
+</details>
+
+<details>
+<summary><b>🔗 Step 4: Select Port</b></summary>
+
+| OS | Port Location |
+|:---|:--------------|
+| 🪟 **Windows** | Check Device Manager for COM port |
+| 🐧 **Linux** | Usually `/dev/ttyUSB0` |
+| 🍎 **macOS** | Usually `/dev/cu.usbserial-*` |
+
+Go to **Tools → Port** and select the correct port.
+
+</details>
+
+<details>
+<summary><b>⚙️ Step 5: Upload Settings</b></summary>
+
+| Setting | Recommended | Notes |
+|:--------|:-----------:|:------|
+| **Upload Speed** | `1,500,000` | Higher = faster |
+| **Erase Flash** | `Disable` | Enable only to wipe flash |
+| **Auto Upload Mode** | `Enable` | For auto-upload circuit |
+| **Standard Lib** | `Arduino_STD_PRINTF` | For printf compatibility |
+
+</details>
+
+<details>
+<summary><b>📤 Step 6: Enter Upload Mode</b></summary>
+
+#### 🖐️ Manual Method
+```
+1. Press and hold [Burn] button
+2. Press and release [RST] button  
+3. Release [Burn] button
+4. Click Upload in Arduino IDE
+```
+
+#### 🤖 Auto Method (Recommended)
+```
+1. Enable: Tools → Auto Upload Mode → Enable
+2. Just click Upload (board enters upload mode automatically)
+```
+
+</details>
+
+<details>
+<summary><b>🧹 Step 7: First-Time Flash Erase</b></summary>
+
+> 💡 Some boards require initial flash erase
+
+1. Set **Tools → Erase Flash → Enable**
+2. Enter upload mode
+3. Click **Sketch → Upload**
+4. Wait for "Erase flash done."
+5. Set **Tools → Erase Flash → Disable**
+6. Check Serial Monitor - if only `#` shows, erase was successful ✅
+
+</details>
 
 ---
 
-## GPIO Reference
+## 📍 GPIO Reference
 
-### Pin Mapping
+### 🗺️ Official AMB25 Pinmap
 
-| Arduino Pin | GPIO | Function | Notes |
-|-------------|------|----------|-------|
-| `PA_7` | GPIO 7 | Digital I/O | General purpose |
-| `PA_8` | GPIO 8 | Digital I/O | General purpose |
-| `PA_12` | GPIO 12 | Digital I/O, PWM | ✅ Safe for relay |
-| `PA_13` | GPIO 13 | Digital I/O, PWM | ✅ Safe for relay |
-| `PA_14` | GPIO 14 | Digital I/O, PWM | ✅ Safe for relay |
-| `PA_15` | GPIO 15 | Digital I/O, PWM | ✅ Safe for relay |
-| `PA_21` | GPIO 21 | Digital I/O | ✅ Safe for button |
-| `PA_22` | GPIO 22 | Digital I/O | ✅ Safe for button |
-| `PA_23` | GPIO 23 | Digital I/O | General purpose |
-| `PA_24` | GPIO 24 | Digital I/O | General purpose |
-| `PA_25` | GPIO 25 | Digital I/O, ADC | Analog capable |
-| `PA_26` | GPIO 26 | Digital I/O, ADC | Analog capable |
-| `PA_27` | GPIO 27 | SPI MOSI | |
-| `PA_28` | GPIO 28 | SPI MISO | |
-| `PA_29` | GPIO 29 | SPI CLK | |
-| `PA_30` | GPIO 30 | SPI CS | |
+> 💡 **Tip:** All GPIO pins support interrupts (INT). Use ✅ marked pins for general purpose I/O.
+
+| Pin# | GPIO | INT | ADC | PWM | UART | SPI | I2C | IR | SWD | Notes |
+|------|------|-----|-----|-----|------|-----|-----|-----|-----|-------|
+| 0 | PA15 | ✓ | | | | SPI1_SS | | | | ✅ Output |
+| 1 | PA14 | ✓ | | | | SPI1_SCLK | | | | ✅ Output |
+| 2 | PA13 | ✓ | | ✓ | SERIAL2_RX | SPI1_MISO | | | | ✅ Output/PWM |
+| 3 | PA12 | ✓ | | ✓ | SERIAL2_TX | SPI1_MOSI | | | | ✅ Output/PWM |
+| 4 | PA30 | ✓ | | ✓ | | | | | | ✅ Output/PWM |
+| 5 | PA28 | ✓ | | ✓ | | | | | | ✅ Output/PWM |
+| 6 | PA26 | ✓ | | ✓ | | | I2C_SDA | IR_RX | | I2C Data |
+| 7 | PA25 | ✓ | | ✓ | | | I2C_SCL | IR_TX | | I2C Clock |
+| 8 | PA27 | ✓ | | | | | | | SWD_DATA | Debug |
+| 9 | PB3 | ✓ | A6 | | | | | | SWD_CLK | ADC/Debug |
+| 10 | PB2 | ✓ | A5 | | | | | | | ✅ ADC Input |
+| 11 | PB1 | ✓ | A4 | | | | | | | ✅ ADC Input |
+| 12 | PA7 | ✓ | | | LOG_TX | | | | | Serial Log TX |
+| 13 | PA8 | ✓ | | | LOG_RX | | | | | Serial Log RX |
+| 14 | PB23 | ✓ | | ✓ | | | | IR_TX | | ✅ Output/PWM |
+| 15 | PB22 | ✓ | | ✓ | | | | IR_RX | | ✅ Output/PWM |
+| 16 | PB19 | ✓ | | ✓ | SERIAL1_TX | SPI_MISO | | | | UART1/SPI |
+| 17 | PB18 | ✓ | | ✓ | SERIAL1_RX | SPI_MOSI | | | | UART1/SPI |
+| 18 | PB21 | ✓ | | ✓ | | SPI_SS | | | | SPI Select |
+| 19 | PB20 | ✓ | | ✓ | | SPI_SCLK | | | | SPI Clock |
 
 ### Recommended Pin Usage
 
+Based on official pinmap:
+
 ```cpp
-// Relay outputs (active LOW)
-const int RELAY_PINS[] = {PA_12, PA_13, PA_14, PA_15};
+// Relay outputs (PWM capable, active LOW)
+// Use pins with PWM capability for relay control
+const int RELAY_PINS[] = {
+  PA12,   // Pin 3: PWM, SERIAL2_TX, SPI1_MOSI
+  PA13,   // Pin 2: PWM, SERIAL2_RX, SPI1_MISO  
+  PA14,   // Pin 1: SPI1_SCLK
+  PA15,   // Pin 0: SPI1_SS
+  PA30,   // Pin 4: PWM
+  PA28,   // Pin 5: PWM
+  PB22,   // Pin 15: PWM, IR_RX
+  PB23    // Pin 14: PWM, IR_TX
+};
 
-// Button inputs (with internal pullup)
-const int BUTTON_PINS[] = {PA_21, PA_22, PA_23, PA_24};
+// Button inputs (with interrupt capability)
+// All GPIOs support interrupts
+const int BUTTON_PINS[] = {
+  PA25,   // Pin 7: I2C_SCL (use if not using I2C)
+  PA26,   // Pin 6: I2C_SDA (use if not using I2C)
+  PB1,    // Pin 11: ADC A4
+  PB2     // Pin 10: ADC A5
+};
 
-// LED indicator
-const int LED_PIN = PA_7;
+// I2C Bus (Wire library)
+const int SDA_PIN = PA26;  // Pin 6
+const int SCL_PIN = PA25;  // Pin 7
 
-// I2C
-const int SDA_PIN = PA_26;
-const int SCL_PIN = PA_25;
+// Hardware Serial
+// SERIAL1 (Serial1): PB19 TX, PB18 RX
+// SERIAL2 (Serial2): PA12 TX, PA13 RX
+// LOG: PA7 TX, PA8 RX
 
-// Serial2 (hardware UART)
-const int TX2_PIN = PA_14;
-const int RX2_PIN = PA_13;
+// SPI Bus (default)
+// MISO: PB19, MOSI: PB18, SS: PB21, SCLK: PB20
+
+// SPI1 Bus
+// MISO: PA13, MOSI: PA12, SS: PA15, SCLK: PA14
+
+// ADC Pins (analogRead)
+const int ADC_PINS[] = {
+  PB3,    // Pin 9: A6 (shared with SWD_CLK)
+  PB2,    // Pin 10: A5
+  PB1     // Pin 11: A4
+};
 ```
 
-### GPIO Configuration
+### ⚠️ Important Pin Notes
+
+> **Warning:** Some pins have shared functions. Check before using!
+
+| Function | Pins | ⚠️ Warning |
+|:---------|:----:|:-----------|
+| **📟 LOG Serial** | PA7/PA8 | Used for Serial Monitor output |
+| **🔧 SWD Debug** | PA27/PB3 | Avoid if using debugger |
+| **🔗 I2C** | PA25/PA26 | Shared with IR TX/RX |
+| **📡 UART1** | PB18/PB19 | Shared with SPI MISO/MOSI |
+| **📡 UART2** | PA12/PA13 | Shared with SPI1 MISO/MOSI |
+
+### 🎮 GPIO Configuration
 
 ```cpp
 // Digital output
-pinMode(PA_12, OUTPUT);
-digitalWrite(PA_12, HIGH);
-digitalWrite(PA_12, LOW);
+pinMode(PA12, OUTPUT);
+digitalWrite(PA12, HIGH);
+digitalWrite(PA12, LOW);
 
 // Digital input with pullup
-pinMode(PA_21, INPUT_PULLUP);
-int state = digitalRead(PA_21);
+pinMode(PA25, INPUT_PULLUP);
+int state = digitalRead(PA25);
 
 // Digital input with pulldown
-pinMode(PA_21, INPUT_PULLDOWN);
+pinMode(PA25, INPUT_PULLDOWN);
 
 // PWM output (0-255)
-pinMode(PA_12, OUTPUT);
-analogWrite(PA_12, 128);  // 50% duty cycle
+// PWM capable: PA12, PA13, PA30, PA28, PA25, PA26, PB22, PB23, PB19, PB18, PB21, PB20
+pinMode(PA12, OUTPUT);
+analogWrite(PA12, 128);  // 50% duty cycle
 
-// Analog input (0-1023)
-int value = analogRead(PA_25);
+// Analog input (0-4095 on AMB25, 12-bit ADC)
+// ADC capable: PB3(A6), PB2(A5), PB1(A4)
+int value = analogRead(PB2);  // Read from A5
 ```
 
 ---
 
-## Platform Detection
+## 🔍 Platform Detection
+
+> 💡 Use these macros to write code that works across ESP8266, ESP32, and AMB25
 
 ### Detecting AMB25/AmebaD in Code
 
@@ -203,9 +375,12 @@ int value = analogRead(PA_25);
 
 ---
 
-## WiFi
+## 📶 WiFi
 
-### Basic WiFi Connection
+> 📡 AMB25 supports both 2.4GHz and 5GHz WiFi bands
+
+<details>
+<summary><b>📶 Basic WiFi Connection</b></summary>
 
 ```cpp
 #include <WiFi.h>
@@ -240,7 +415,10 @@ void loop() {
 }
 ```
 
-### WiFi with Static IP
+</details>
+
+<details>
+<summary><b>🔒 WiFi with Static IP</b></summary>
 
 ```cpp
 #include <WiFi.h>
@@ -266,7 +444,10 @@ void setup() {
 }
 ```
 
-### Access Point Mode
+</details>
+
+<details>
+<summary><b>📡 Access Point Mode</b></summary>
 
 ```cpp
 #include <WiFi.h>
@@ -287,7 +468,10 @@ void loop() {
 }
 ```
 
-### TCP Server
+</details>
+
+<details>
+<summary><b>🖥️ TCP Server</b></summary>
 
 ```cpp
 #include <WiFi.h>
@@ -322,7 +506,10 @@ void loop() {
 }
 ```
 
-### TCP Client
+</details>
+
+<details>
+<summary><b>📤 TCP Client</b></summary>
 
 ```cpp
 #include <WiFi.h>
@@ -349,7 +536,10 @@ void sendToServer(const char* host, uint16_t port, const char* message) {
 }
 ```
 
-### UDP Communication
+</details>
+
+<details>
+<summary><b>📨 UDP Communication</b></summary>
 
 ```cpp
 #include <WiFi.h>
@@ -395,11 +585,16 @@ void sendBroadcast(const char* message) {
 }
 ```
 
+</details>
+
 ---
 
-## Serial Communication
+## 💬 Serial Communication
 
-### Basic Serial
+> 🔌 AMB25 has 3 hardware serial ports - more than most Arduino boards!
+
+<details>
+<summary><b>📟 Basic Serial</b></summary>
 
 ```cpp
 void setup() {
@@ -420,7 +615,10 @@ void loop() {
 }
 ```
 
-### Printf-Style Output
+</details>
+
+<details>
+<summary><b>🖨️ Printf-Style Output</b></summary>
 
 AMB25 supports `Serial.printf()` natively:
 
@@ -432,7 +630,10 @@ const char* name = "AMB25";
 Serial.printf("Value: %d, Temp: %.1f, Name: %s\n", value, temp, name);
 ```
 
-### Cross-Platform Printf Macro
+</details>
+
+<details>
+<summary><b>🔀 Cross-Platform Printf Macro</b></summary>
 
 For code that works on all platforms:
 
@@ -452,35 +653,54 @@ For code that works on all platforms:
 Serial_printf("Relay %d is %s\n", 1, "ON");
 ```
 
-### Hardware Serial2
+</details>
+
+### 🔗 Hardware Serial Interfaces
+
+AMB25 has **3 hardware serial ports**:
+
+| Serial Port | TX Pin | RX Pin | Notes |
+|:-----------:|:------:|:------:|:------|
+| `Serial` (LOG) | PA7 (Pin 12) | PA8 (Pin 13) | USB Serial Monitor |
+| `Serial1` | PB19 (Pin 16) | PB18 (Pin 17) | Hardware UART1, shared with SPI |
+| `Serial2` | PA12 (Pin 3) | PA13 (Pin 2) | Hardware UART2, shared with SPI1 |
 
 ```cpp
-// Serial2 on PA_14 (TX) and PA_13 (RX)
+// Using all serial ports
 void setup() {
-  Serial.begin(115200);   // USB Serial
-  Serial2.begin(9600);    // Hardware UART
+  Serial.begin(115200);   // USB Serial Monitor (LOG)
+  Serial1.begin(9600);    // Hardware UART1 on PB19/PB18
+  Serial2.begin(9600);    // Hardware UART2 on PA12/PA13
   
-  Serial.println("Dual serial ready");
+  Serial.println("All serial ports ready");
 }
 
 void loop() {
-  // Forward Serial2 to Serial
+  // Forward Serial1 to Serial
+  while (Serial1.available()) {
+    Serial.write(Serial1.read());
+  }
+  
+  // Forward Serial2 to Serial  
   while (Serial2.available()) {
     Serial.write(Serial2.read());
   }
   
-  // Forward Serial to Serial2
+  // Forward USB Serial to Serial1
   while (Serial.available()) {
-    Serial2.write(Serial.read());
+    Serial1.write(Serial.read());
   }
 }
 ```
 
 ---
 
-## System Functions
+## 🔄 System Functions
 
-### Reboot/Reset
+> ⚠️ AMB25 uses ARM-specific functions instead of ESP functions
+
+<details>
+<summary><b>🔁 Reboot/Reset</b></summary>
 
 ```cpp
 // AMB25 does NOT have ESP.restart()
@@ -502,7 +722,10 @@ delay(100);
 reboot();
 ```
 
-### Get Free Memory
+</details>
+
+<details>
+<summary><b>📊 Get Free Memory</b></summary>
 
 ```cpp
 #if defined(ESP8266)
@@ -518,7 +741,10 @@ reboot();
 Serial.printf("Free heap: %u bytes\n", freeHeap);
 ```
 
-### Get Chip ID / MAC Address
+</details>
+
+<details>
+<summary><b>🆔 Get Chip ID / MAC Address</b></summary>
 
 ```cpp
 String getChipId() {
@@ -538,7 +764,10 @@ String getChipId() {
 }
 ```
 
-### Delays and Timing
+</details>
+
+<details>
+<summary><b>⏱️ Delays and Timing</b></summary>
 
 ```cpp
 // Standard delays work on AMB25
@@ -552,7 +781,10 @@ while (millis() - startTime < 5000) {
 }
 ```
 
-### Watchdog Timer
+</details>
+
+<details>
+<summary><b>🐕 Watchdog Timer</b></summary>
 
 ```cpp
 // AMB25 has watchdog but API differs from ESP
@@ -566,11 +798,16 @@ void loop() {
 }
 ```
 
+</details>
+
 ---
 
-## Storage
+## 💾 Storage
 
-### Flash Storage (FlashMemory)
+> 💡 AMB25 uses **FlashMemory** instead of EEPROM
+
+<details>
+<summary><b>💿 Flash Storage (FlashMemory)</b></summary>
 
 AMB25 uses FlashMemory instead of EEPROM:
 
@@ -611,7 +848,10 @@ String loadData() {
 }
 ```
 
-### Cross-Platform Storage
+</details>
+
+<details>
+<summary><b>🔀 Cross-Platform Storage</b></summary>
 
 ```cpp
 #if defined(BOARD_RTL8720DN) || defined(ARDUINO_AMEBA)
@@ -654,7 +894,10 @@ uint8_t storageRead(int addr) {
 }
 ```
 
-### JSON Configuration Storage
+</details>
+
+<details>
+<summary><b>📄 JSON Configuration Storage</b></summary>
 
 ```cpp
 #include <ArduinoJson.h>
@@ -736,15 +979,20 @@ bool loadConfig(Config& cfg) {
 }
 ```
 
+</details>
+
 ---
 
-## Common Issues & Fixes
+## 🐛 Common Issues & Fixes
 
-### Issue 1: ESP.restart() Not Available
+> 🔧 Quick solutions to common AMB25 development problems
+
+<details>
+<summary><b>❌ Issue 1: ESP.restart() Not Available</b></summary>
 
 **Error:** `'class EspClass' has no member named 'restart'`
 
-**Solution:**
+**✅ Solution:**
 ```cpp
 // DON'T use on AMB25:
 // ESP.restart();
@@ -759,11 +1007,14 @@ bool loadConfig(Config& cfg) {
 #endif
 ```
 
-### Issue 2: EEPROM Not Available
+</details>
+
+<details>
+<summary><b>❌ Issue 2: EEPROM Not Available</b></summary>
 
 **Error:** `'EEPROM' was not declared`
 
-**Solution:**
+**✅ Solution:**
 ```cpp
 // AMB25 uses FlashMemory, not EEPROM
 #if defined(BOARD_RTL8720DN) || defined(ARDUINO_AMEBA)
@@ -773,11 +1024,16 @@ bool loadConfig(Config& cfg) {
 #endif
 ```
 
-### Issue 3: IPAddress.toString() Returns String
+</details>
+
+<details>
+<summary><b>❌ Issue 3: IPAddress.toString() Returns String</b></summary>
 
 **Error:** `'class String' has no member named 'toString'`
 
 AMB25's `WiFi.localIP()` may return String directly:
+
+**✅ Solution:**
 ```cpp
 // Works on all platforms:
 Serial.println(WiFi.localIP());
@@ -790,20 +1046,26 @@ Serial.println(WiFi.localIP());
 #endif
 ```
 
-### Issue 4: Upload Fails
+</details>
+
+<details>
+<summary><b>❌ Issue 4: Upload Fails</b></summary>
 
 **Symptoms:** Upload hangs or fails
 
-**Solutions:**
+**✅ Solutions:**
 1. Enter download mode (BOOT + RESET)
 2. Use correct port (`/dev/ttyUSB0`)
 3. Try different USB cable
 4. Reduce upload speed in Tools menu
 5. Close Serial Monitor before upload
 
-### Issue 5: WiFi Connection Fails
+</details>
 
-**Solutions:**
+<details>
+<summary><b>❌ Issue 5: WiFi Connection Fails</b></summary>
+
+**✅ Solutions:**
 1. Check credentials (case-sensitive)
 2. Use 2.4GHz network (5GHz may have issues)
 3. Move closer to router
@@ -816,14 +1078,20 @@ while (WiFi.status() != WL_CONNECTED && attempts < 60) {
 }
 ```
 
-### Issue 6: GPIO Not Working
+</details>
 
-**Check:**
+<details>
+<summary><b>❌ Issue 6: GPIO Not Working</b></summary>
+
+**🔍 Check:**
 1. Pin is correct (`PA_12` not just `12`)
 2. pinMode is set before use
 3. Pin is not used by another peripheral
 
-### Issue 7: Compilation Warnings
+</details>
+
+<details>
+<summary><b>❌ Issue 7: Compilation Warnings (ArduinoJson)</b></summary>
 
 **ArduinoJson v7 warnings:**
 ```cpp
@@ -835,9 +1103,12 @@ while (WiFi.status() != WL_CONNECTED && attempts < 60) {
 JsonDocument doc;
 ```
 
-### Issue 8: Random Crashes
+</details>
 
-**Solutions:**
+<details>
+<summary><b>❌ Issue 8: Random Crashes</b></summary>
+
+**✅ Solutions:**
 1. Add small delays in tight loops:
 ```cpp
 void loop() {
@@ -848,11 +1119,16 @@ void loop() {
 2. Don't block for too long
 3. Check for memory leaks in String usage
 
+</details>
+
 ---
 
-## Code Examples
+## 📝 Code Examples
 
-### Complete Relay Controller
+> 💡 Complete working examples you can copy-paste
+
+<details>
+<summary><b>🔌 Complete Relay Controller</b></summary>
 
 ```cpp
 #include <WiFi.h>
@@ -1013,59 +1289,124 @@ void onButtonPress() {
 }
 ```
 
+</details>
+
 ---
 
-## Quick Reference Card
+## 📋 Quick Reference Card
 
+<table>
+<tr>
+<td width="50%">
+
+### 🔍 Platform Detection
 ```cpp
-// PLATFORM DETECTION
 #if defined(BOARD_RTL8720DN) || defined(ARDUINO_AMEBA)
   #define IS_AMB25 1
 #endif
+```
 
-// REBOOT
+### 🔁 Reboot
+```cpp
 NVIC_SystemReset();
+```
 
-// GPIO
+### 🔌 GPIO
+```cpp
 const int RELAY = PA_12;
 const int BUTTON = PA_21;
 pinMode(RELAY, OUTPUT);
 pinMode(BUTTON, INPUT_PULLUP);
+```
 
-// WIFI
+</td>
+<td width="50%">
+
+### 📶 WiFi
+```cpp
 #include <WiFi.h>
 WiFi.begin(ssid, pass);
 WiFi.localIP();
+```
 
-// TCP SERVER
+### 🖥️ TCP Server
+```cpp
 WiFiServer server(8088);
 server.begin();
 WiFiClient client = server.available();
+```
 
-// UDP
+### 📨 UDP
+```cpp
 #include <WiFiUdp.h>
 WiFiUDP udp;
 udp.begin(32108);
+```
 
-// STORAGE
+</td>
+</tr>
+<tr>
+<td>
+
+### 💾 Storage
+```cpp
 #include <FlashMemory.h>
 FlashMemory.begin(0x000FF000, size);
 FlashMemory.read(addr, buffer, len);
 FlashMemory.update(addr, buffer, len);
 FlashMemory.end();
+```
 
-// SERIAL PRINTF
+</td>
+<td>
+
+### 🖨️ Serial Printf
+```cpp
 Serial.printf("Value: %d\n", value);
 ```
 
+### 🆔 Get MAC
+```cpp
+uint8_t mac[6];
+WiFi.macAddress(mac);
+```
+
+</td>
+</tr>
+</table>
+
 ---
 
-## Resources
+## 🔗 Resources
 
-- [Realtek AmebaD Arduino GitHub](https://github.com/ambiot/ambd_arduino)
-- [AMB25 Pinout Diagram](https://www.amebaiot.com/en/amebad-amb25-arduino-getting-started/)
-- [RTL8720DF Datasheet](https://www.realtek.com/en/products/communications-network-ics/item/rtl8720df)
+<div align="center">
+
+| Resource | Link |
+|:---------|:-----|
+| 📚 **Official Arduino SDK** | [github.com/ambiot/ambd_arduino](https://github.com/ambiot/ambd_arduino) |
+| 📍 **AMB25 Getting Started** | [amebaiot.com/.../amb25-getting-started](https://www.amebaiot.com/en/amebad-amb25-arduino-getting-started/) |
+| 📄 **RTL8720DF Datasheet** | [realtek.com/.../rtl8720df](https://www.realtek.com/en/products/communications-network-ics/item/rtl8720df) |
+| 💬 **Community Forum** | [forum.amebaiot.com](https://forum.amebaiot.com/) |
+
+</div>
 
 ---
 
-*Document Version: 2.0.0 | Last Updated: December 2024*
+<div align="center">
+
+### 📄 Document Info
+
+| | |
+|:-:|:-:|
+| **Version** | 2.0.0 |
+| **Last Updated** | December 2024 |
+| **Author** | [Nityam](https://github.com/Nityam2007) |
+| **License** | MIT |
+
+---
+
+**Made with ❤️ for the AMB25 Community**
+
+[![GitHub](https://img.shields.io/badge/GitHub-nexusio--library-black?style=flat-square&logo=github)](https://github.com/Nityam2007/nexusio-library)
+
+</div>
