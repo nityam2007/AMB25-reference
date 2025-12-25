@@ -22,6 +22,12 @@
 
 ---
 
+NOTE FROM AUTHOR : 
+
+I made this reference cause AMB25 i.e RealTek Forgot
+
+---
+
 ## 📋 Table of Contents
 
 <details>
